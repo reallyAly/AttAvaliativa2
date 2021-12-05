@@ -37,6 +37,23 @@ async function retornaTodasNoticias()
    return await storage.values();
 }
 
+async function retornaNoticia(id)
+{
+    return await storage.getItem(id);
+}
+
+async function registraEmail(email)
+{
+    let listaEmails = await storage.getItem("lista_emails");
+
+    if(listaEmails){
+        listaEmails.push({email});
+        return await storage.updateItem("lista_emails",listaEmails);
+    }
+    
+    return await storage.setItem("lista_emails", [{email}]);
+}
+
 inicia();
 
 app.post('/noticia', (req, res) => {
@@ -46,6 +63,15 @@ app.post('/noticia', (req, res) => {
 
 app.get('/noticia', (req, res) => {
     retornaTodasNoticias().then((data) => res.send(data));
+});
+
+app.get("/noticia/:id", (req, res) => {
+    retornaNoticia(req.params.id).then((noticia) => res.send(noticia));
+});
+
+app.post("/inscricao", (req, res) => {
+    registraEmail(req.body.email);
+    res.send("Inscrição realizada com sucesso");
 });
 
 app.listen(3000, () => {});
