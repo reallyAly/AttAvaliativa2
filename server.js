@@ -26,7 +26,9 @@ async function inicia()
 
 async function adicionaNoticia(noticia)
 {
-    await storage.setItem(Math.floor(Date.now() * Math.random()).toString(36),{
+    let id = Math.floor(Date.now() * Math.random()).toString(36);
+    await storage.setItem(id,{
+        noticia_id: id,
         titulo: noticia.titulo,
         resumo: noticia.resumo,
         url: noticia.url
